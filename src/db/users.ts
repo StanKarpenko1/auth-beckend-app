@@ -12,11 +12,16 @@ const UserSchema = new mongoose.Schema({
 
 export const UserModel = mongoose.model('User', UserSchema);
 
-export const getUsers = () => UserModel.find();
-export const getUserByEmail = (email: String) => UserModel.findOne ({ email }) ;
-export const getUserBySessionToken = (sessionToken: String) => UserModel.findOne({
-    'authentication.sessionTiken': sessionToken, 
-});
+export const getUsers =  () => UserModel.find();
+export const getUserByEmail =  (email: String) => UserModel.findOne ({ email }) ;
+export const getUserBySessionToken = async (sessionToken: string) => {
+    try {
+        return await UserModel.findOne({ 'authentication.sessionToken': sessionToken });
+    } catch (error) {
+        console.error('Error fetching user by session token:', error);
+        throw error;
+    }
+};
 export const getUserById = (id: String) => {
     UserModel.findById(id);
 }
